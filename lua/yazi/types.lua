@@ -69,6 +69,7 @@
 ---@field public bufdelete_implementation? YaziBufdeleteImpl # how to delete (close) a buffer. Defaults to `snacks.bufdelete` from https://github.com/folke/snacks.nvim, which maintains the window layout.
 ---@field public picker_add_copy_relative_path_action? "snacks.picker" # add an action to a file picker to copy the relative path to the selected file(s). The implementation is the same as for the `copy_relative_path_to_selected_files` yazi.nvim keymap. Currently only snacks.nvim is supported. Documentation can be found in the keybindings section of the readme. The default is `nil`, which means no action is added.
 ---@field public pick_window_implementation? "snacks.picker" # the implementation to use for picking a window. The default is `snacks.picker`, which uses the snacks.nvim picker's "pick_win" action.
+---@field public shell? string[] | nil # the shell to use for running yazi and ya. Defaults to `nil`, which means no shell is used (the executable is called directly). On Windows, it's recommended to use `{"pwsh.exe", "-NoProfile", "-Command"}` or `{"powershell.exe", "-NoProfile", "-Command"}`.
 
 ---@class YaziGetRelativePathImplementationArguments
 ---@field source_dir string the starting path, where the relative path is calculated from

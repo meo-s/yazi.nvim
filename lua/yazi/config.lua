@@ -79,6 +79,17 @@ function M.default()
       bufdelete_implementation = "bundled-snacks",
       picker_add_copy_relative_path_action = nil,
       pick_window_implementation = "snacks.picker",
+      shell = (function()
+        if vim.fn.has("win32") ~= 1 then
+          return nil
+        end
+
+        if vim.fn.executable("wsl.exe") == 1 then
+          return { "wsl.exe", "-e", "bash", "-ilc" }
+        end
+
+        return nil
+      end)(),
     },
 
     floating_window_scaling_factor = 0.9,

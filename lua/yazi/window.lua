@@ -161,10 +161,12 @@ function YaziFloatingWindow:open_and_display()
         style = "minimal",
       })
 
-      self.on_resized({
-        win_height = dims.height,
-        win_width = dims.width,
-      })
+      if self.on_resized then
+        self.on_resized({
+          win_height = dims.height,
+          win_width = dims.width,
+        })
+      end
     end,
   })
 

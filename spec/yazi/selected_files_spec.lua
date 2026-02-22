@@ -80,5 +80,23 @@ describe("choosing the correct files when starting yazi", function()
         assert.equal("/my-tmp/file2", result[2].filename)
       end
     )
+    it(
+      "when in an empty quickfix window, falls back to the current file",
+      function()
+        -- Set current buffer to something
+        local bufnr = vim.api.nvim_create_buf(true, false)
+        vim.api.nvim_buf_set_name(bufnr, "/tmp/some-file")
+        vim.api.nvim_set_current_buf(bufnr)
+
+        -- Set buftype to quickfix and ensure qflist is empty
+        vim.api.nvim_set_option_value("buftype", "quickfix", { buf = 0 })
+        vim.fn.setqflist({})
+
+        local result = utils.selected_file_paths()
+
+        assert.equal(1, #result)
+        assert.equal("/tmp/some-file", result[1].filename)
+      end
+    )
   end)
 end)

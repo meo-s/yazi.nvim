@@ -177,7 +177,9 @@ function M.selected_file_paths(path)
       end
     end
 
-    return filenames
+    if #filenames > 0 then
+      return filenames
+    end
   end
 
   ---@type Path[]

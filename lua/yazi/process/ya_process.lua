@@ -91,6 +91,35 @@ function YaProcess:get_yazi_command(paths)
 
   command_words = remove_duplicates(command_words)
 
+  if self.config.integrations.shell ~= nil then
+    local result = {}
+    for _, word in ipairs(self.config.integrations.shell) do
+      table.insert(result, word)
+    end
+
+    local shell_bin = result[1]:lower()
+    local is_wsl = shell_bin:match("wsl.exe")
+
+    local command_string = ""
+    if is_wsl then
+      local escaped = {}
+      for _, word in ipairs(command_words) do
+        -- quote each argument and escape inner quotes for the outer shell
+        table.insert(escaped, "'" .. word:gsub("'", "'\\''") .. "'")
+      end
+      command_string = table.concat(escaped, " ")
+    else
+      local escaped = {}
+      for _, word in ipairs(command_words) do
+        table.insert(escaped, '"' .. word .. '"')
+      end
+      command_string = table.concat(escaped, " ")
+    end
+
+    table.insert(result, command_string)
+    return result
+  end
+
   return command_words
 end
 
@@ -134,6 +163,35 @@ function YaProcess:start(context)
     "sub",
     table.concat(event_kinds, ","),
   }
+
+  if self.config.integrations.shell ~= nil then
+    local result = {}
+    for _, word in ipairs(self.config.integrations.shell) do
+      table.insert(result, word)
+    end
+
+    local shell_bin = result[1]:lower()
+    local is_wsl = shell_bin:match("wsl.exe")
+
+    local command_string = ""
+    if is_wsl then
+      local escaped = {}
+      for _, word in ipairs(ya_command) do
+        table.insert(escaped, "'" .. word:gsub("'", "'\\''") .. "'")
+      end
+      command_string = table.concat(escaped, " ")
+    else
+      local escaped = {}
+      for _, word in ipairs(ya_command) do
+        table.insert(escaped, '"' .. word .. '"')
+      end
+      command_string = table.concat(escaped, " ")
+    end
+
+    table.insert(result, command_string)
+    ya_command = result
+  end
+
   Log:debug(
     string.format(
       "Opening ya with the command: (%s), attempt %s",
